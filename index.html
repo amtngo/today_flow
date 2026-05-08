@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今日の流れ</title>
+
+  <style>
+    body{
+      margin:0;
+      padding:20px;
+      box-sizing:border-box;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background:#0f172a;
+      color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      text-align:center;
+    }
+
+    .box{
+      width:100%;
+      max-width:430px;
+      padding:28px 24px;
+      background:#111827;
+      border-radius:20px;
+      box-sizing:border-box;
+    }
+
+    h1{
+      font-size:26px;
+      margin:0 0 24px;
+      font-weight:700;
+      letter-spacing:1px;
+    }
+
+    .fortune{
+      font-size:18px;
+      line-height:1.9;
+      white-space:pre-line;
+      word-break:keep-all;
+    }
+
+    .blocked{
+      font-size:18px;
+      line-height:1.9;
+    }
+
+    .sub{
+      margin-top:24px;
+      font-size:14px;
+      color:#94a3b8;
+      line-height:1.7;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box" id="app"></div>
+
+<script>
+
+const KEY = "today_flow_jp";
+const today = new Date().toISOString().slice(0,10);
+const viewed = localStorage.getItem(KEY);
+
+const app = document.getElementById("app");
+
+if(viewed === today){
+
+  app.innerHTML = `
+    <div class="blocked">
+      今日の流れは、<br>
+      すでに確認済みです。<br><br>
+
+      1日1回だけ<br>
+      確認することができます。
+
+      <div class="sub">
+        また明日、<br>
+        静かに確認してみてください。
+      </div>
+    </div>
+  `;
+
+}else{
+
+  const fortunes = [
+
+`今日は、
+少し慎重なくらいがちょうどいい流れです。
+
+焦って動くより、
+タイミングを見る方がうまくいきます。`,
+
+`思っていたよりも、
+静かな時間が必要になる日です。
+
+無理に合わせすぎない方が、
+気持ちは安定していきます。`,
+
+`今日は、
+返信のタイミングが大事になりそうです。
+
+急ぎすぎるより、
+少し間を置く方が自然です。`,
+
+`小さな選択が、
+あとから流れを変えていきます。
+
+なんとなく決めたことほど、
+意外と残りやすい日です。`,
+
+`今日は、
+少しだけ周りを気にしすぎてしまいそうです。
+
+自分のペースを優先した方が、
+流れは落ち着いていきます。`,
+
+`夜になるほど、
+気持ちが整理されていく流れです。
+
+昼の迷いを、
+そのまま信じすぎなくても大丈夫です。`,
+
+`今日は、
+静かな場所の方が落ち着けそうです。
+
+人の多い空気より、
+自分の感覚を優先してみてください。`,
+
+`後回しにしていたことを、
+少しだけ進めると流れが変わります。
+
+完璧より、
+動き出すことが大切な日です。`,
+
+`今日は、
+思ったより疲れが出やすい流れです。
+
+無理に頑張るより、
+少し余白を残した方が安定します。`,
+
+`気にしていたことが、
+思ったより小さく感じられる日です。
+
+考えすぎない方が、
+自然に流れが動いていきます。`,
+
+`今日は、
+LINEの空気感が気になりやすい日です。
+
+深く考えすぎるより、
+少し時間を置く方が落ち着きます。`,
+
+`ゆっくり進んでいるように見えても、
+流れ自体は悪くありません。
+
+焦らない方が、
+結果は自然についてきます。`,
+
+`今日は、
+いつもより直感が働きやすい日です。
+
+最初に感じた違和感を、
+軽く流さない方がよさそうです。`,
+
+`小さな偶然が、
+流れを変えるきっかけになりそうです。
+
+今日は少しだけ、
+周りをよく見てみてください。`,
+
+`今日は、
+一人の時間が必要になりそうです。
+
+無理に合わせ続けるより、
+静かに整える方が楽になります。`,
+
+`思っていたより、
+優しい流れが入ってくる日です。
+
+少し肩の力を抜いた方が、
+自然にうまくいきます。`,
+
+`今日は、
+夜の時間に流れが変わりやすい日です。
+
+昼の気分のまま、
+全部を決めなくても大丈夫です。`,
+
+`少し迷っていたことに、
+答えが見えてきそうです。
+
+急いで結論を出すより、
+自然に整理されるのを待ってみてください。`,
+
+`今日は、
+言葉より空気感が大切になる日です。
+
+無理に説明しすぎない方が、
+伝わることもあります。`,
+
+`気になっていたことが、
+少しずつ落ち着いていきそうです。
+
+今日は、
+安心できる流れを優先してください。`,
+
+`今日は、
+静かな場所にいる方が運気が安定します。
+
+人に合わせすぎない方が、
+自然な流れになります。`,
+
+`小さな我慢が、
+あとから疲れに変わりやすい日です。
+
+無理に平気なふりをしない方が、
+流れは安定します。`,
+
+`今日は、
+少しだけ昔のことを思い出しやすい日です。
+
+懐かしさに引っ張られすぎず、
+今の流れを大切にしてください。`,
+
+`今日は、
+自分の感覚を優先した方がよさそうです。
+
+周りのペースより、
+自分の流れを大事にしてください。`,
+
+`思ったより、
+ゆっくり進む流れの日です。
+
+急いで結果を求めるより、
+今の空気を整える方が大切です。`
+
+  ];
+
+  const randomIndex = Math.floor(Math.random() * fortunes.length);
+  const selectedFortune = fortunes[randomIndex];
+
+  app.innerHTML = `
+    <h1>今日の流れ</h1>
+
+    <div class="fortune">
+${selectedFortune}
+    </div>
+
+    <div class="sub">
+      今日の流れは<br>
+      1日1回だけ確認できます
+    </div>
+  `;
+
+  localStorage.setItem(KEY, today);
+
+}
+
+</script>
+
+</body>
+</html>
